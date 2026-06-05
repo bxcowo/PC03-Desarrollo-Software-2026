@@ -10,7 +10,7 @@ from alembic import context
 
 # Importar Base y Modelos para autogenerate
 from app.infraestructura.database import Base
-from app.infraestructura.database.models import ciudadano, iniciativa, firma
+from app.infraestructura.database.models import ciudadano, iniciativa, firma, propuesta, componente_documental
 
 # this is the Alembic Config object, whichn provides
 # access to the values within the .ini file in use.

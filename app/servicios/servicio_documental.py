@@ -54,6 +54,10 @@ class ServicioDocumental:
     def adjuntar_recurso_externo(self, iniciativa_id: int, ciudadano_id: int, nombre_archivo: str, contenido_binario: bytes) -> dict:
         self._validar_permisos(iniciativa_id, ciudadano_id)
         
+        propuesta = self._repo.obtener_por_iniciativa(iniciativa_id)
+        if not propuesta:
+            raise ValueError(f"No existe propuesta para la iniciativa {iniciativa_id}")
+
         if nombre_archivo.lower().endswith(".pdf"):
             adaptador = AdaptadorPDF(contenido_binario, nombre_archivo)
         elif nombre_archivo.lower().endswith(".docx"):
@@ -63,13 +67,19 @@ class ServicioDocumental:
             
         info = adaptador.extraer_informacion()
         
-        return self.agregar_articulo_a_seccion(
-            iniciativa_id, 
-            ciudadano_id,
-            "Anexos", 
-            f"Anexo: {info.nombre_original}", 
-            f"Contenido Extraído: {info.texto}\nFormato: {info.formato}\nTamaño: {info.tamano_bytes} bytes"
-        )
+        # Verificar si existe la sección "Anexos", si no, crearla
+        seccion_anexos = self._buscar_seccion(propuesta.hijos, "Anexos")
+        if not seccion_anexos:
+            seccion_anexos = Seccion("Anexos")
+            propuesta.agregar(seccion_anexos)
+            self._repo.guardar(propuesta)
+        
+        nuevo_articulo = Articulo(f"Anexo: {info.nombre_original}", f"Contenido Extraído: {info.texto}\nFormato: {info.formato}\nTamaño: {info.tamano_bytes} bytes")
+        seccion_anexos.agregar(nuevo_articulo)
+        
+        self._repo.guardar(propuesta)
+        self._db.commit()
+        return propuesta.exportar_a_json()
 
     def _validar_permisos(self, iniciativa_id: int, ciudadano_id: int):
         if not self._repo.verificar_autoria(iniciativa_id, ciudadano_id):

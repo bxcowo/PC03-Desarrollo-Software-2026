@@ -1,19 +1,25 @@
 from pydantic import BaseModel
 
 class FirmaRequest(BaseModel):
-    iniciativa_id: str
+    iniciativa_id: int
 
 
 class FirmaResponse(BaseModel):
-    firma_id: str
-    iniciativa_id: str
+    firma_id: int
+    iniciativa_id: int
     total_firmas: int
     estado: str
     sellado_hash: str | None = None
 
 
+class IniciativaCreate(BaseModel):
+    titulo: str
+    descripcion: str
+    dias_limite: int = 90
+
+
 class IniciativaResponse(BaseModel):
-    id: str
+    id: int
     titulo: str
     descripcion: str
     estado: str

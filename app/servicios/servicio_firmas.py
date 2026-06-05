@@ -47,8 +47,8 @@ class ServicioFirmas:
 
         firma_entity = FirmaEntity(
             id=None,
-            ciudadano_id=int(ciudadano_id),
-            iniciativa_id=int(iniciativa_id),
+            ciudadano_id=int(ciudadano_id), # ciudadano_id comes from token (str)
+            iniciativa_id=iniciativa_id,
             es_valida=True,
         )
         self._validador.validar(firma_entity, iniciativa)

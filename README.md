@@ -1,5 +1,10 @@
 # Práctica calificada 3 - Desarrollo de Software
 
+- Nombre y apellidos: Ángel Aarón Flores Alberca
+- Código: 20221346A
+
+El documento de pruebas se encuentra en [tests.md](tests.md)
+
 ## Descripción
 
 El **Legislativo de la República** requiere el desarrollo de una plataforma digital "Voz del Ciudadano" para automatizar el procesamiento de Iniciativas Legislativas de los Ciudadanos.

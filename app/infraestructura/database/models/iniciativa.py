@@ -2,12 +2,13 @@ from __future__ import annotations
 from app.infraestructura.database.base import BaseModel
 from app.dominio.enums.estado_iniciativa import EstadoIniciativaEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, DateTime
+from sqlalchemy import String, Integer, DateTime, ForeignKey
 from datetime import datetime, UTC
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.infraestructura.database.models.firma import Firma
+    from app.infraestructura.database.models.ciudadano import Ciudadano
 
 class Iniciativa(BaseModel):
     __tablename__ = "iniciativas"
@@ -23,4 +24,7 @@ class Iniciativa(BaseModel):
     fecha_limite: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     sellado_hash: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)
 
+    creador_id: Mapped[int] = mapped_column(ForeignKey("ciudadanos.id"), nullable=False)
+    
+    creador: Mapped[Ciudadano] = relationship("Ciudadano")
     firmas: Mapped[list[Firma]] = relationship(back_populates="iniciativa")
